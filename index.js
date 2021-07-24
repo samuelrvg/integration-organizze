@@ -46,12 +46,13 @@ const transactions = async (anoInicial, mesInicial) => {
 
     for (var ano = anoInicial; ano <= anoAtual; ano++) {
         for(var mes = mesInicial; mes <= 12; mes++){
-            const start_date = new Date(ano, mes, 1);
-            const end_date = new Date(ano, mes + 1, 0);
+            const start_date = new Date(ano, mes - 1, 1);
+            const end_date = new Date(ano, mes, 0);
     
             const transactions = await fetchOrganizze('transactions', start_date.toISOString(), end_date.toISOString())
 
             if(transactions.length === 0){
+                console.log('not found transaction')
                 continue;
             }
     
@@ -66,6 +67,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const _transactions = await transactions(2018, 5)
 
-fs.writeFileSync(`${__dirname}\\transactions.json`, `{ "transactions": ${JSON.stringify(_transactions)} }`);
+fs.writeFileSync(`${__dirname}\\transactions.json`, `{"transactions": ${JSON.stringify(_transactions)}}`);
 
-// const _data = JSON.parse(await readFile(new URL('./transactions.json', import.meta.url)));
+//const _data = JSON.parse(await readFile(new URL('./transactions.json', import.meta.url)));
