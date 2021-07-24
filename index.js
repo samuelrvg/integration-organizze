@@ -37,7 +37,7 @@ const transactions = async (anoInicial, mesInicial) => {
     const anoAtual = new Date().getFullYear();
     let data = []
 
-    if(!anoInicial && !mesInicial)
+    if(!anoInicial || !mesInicial)
         throw new Error('error!')
 
     for (var ano = anoInicial; ano <= anoAtual; ano++) {
@@ -61,12 +61,17 @@ const transactions = async (anoInicial, mesInicial) => {
     return data;
 }
 
-const organizzeapi = await transactions(2018, 4)
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+ const organizzeapi = await transactions(2018, 4)
 // console.log(organizzeapi)
 
-// fs.writeFileSync('C:\\Pasta\\transactions.txt', JSON.stringify(data));
+fs.writeFileSync(`${__dirname}\\transactions.txt`, JSON.stringify(organizzeapi));
 
 // import { data } from './transactions.js'
 
 // console.log('local', data.length)
-console.log('organizze', organizzeapi.length)
+// console.log('organizze', organizzeapi.length)
