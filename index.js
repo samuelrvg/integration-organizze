@@ -1,22 +1,27 @@
 import fetch from 'node-fetch';
+import fs from 'fs'
 
-const BASE_URL = 'https://api.organizze.com.br/rest/v2';
-const EMAIL = 'samuel.rvg@gmail.com'
-const KEY = '87f4bc78a78e9802d861d32da5ff06bf729e51ba'
-
-const _headers = {
-    'User-Agent': 'samuel.rvg@gmail.com',
-    'Authorization': `Basic  ${Buffer.from(`${EMAIL}:${KEY}`).toString('base64')}`,
-    'Content-Type': 'application/json'
-}
-
-const fetchOrganizze = async (path) => {
+const fetchOrganizze = async (path, params = {}) => {
     try {
+        const BASE_URL = 'https://api.organizze.com.br/rest/v2';
+        const EMAIL = 'samuel.rvg@gmail.com'
+        const KEY = '87f4bc78a78e9802d861d32da5ff06bf729e51ba'
+
+        const _headers = {
+            'User-Agent': 'samuel.rvg@gmail.com',
+            'Authorization': `Basic  ${Buffer.from(`${EMAIL}:${KEY}`).toString('base64')}`,
+            'Content-Type': 'application/json'
+        }
+
+        let queryParams = ''
+        const { start_date, end_date } = params;
         if(!path){
             throw new Error('path is not defined')
         }
-    
-        const response = await fetch(`${BASE_URL}/${path}`, {
+        if(start_date && end_date){
+            queryParams += `start_date=${start_date}&end_date=${end_date}`
+        }    
+        const response = await fetch(`${BASE_URL}/${path}?${queryParams}`, {
             method: 'GET',
             headers: _headers
         })
@@ -28,26 +33,40 @@ const fetchOrganizze = async (path) => {
     }
 }
 
-const accounts = await fetchOrganizze('accounts')
-console.log(accounts)
+const transactions = async (anoInicial, mesInicial) => {
+    const anoAtual = new Date().getFullYear();
+    let data = []
 
+    if(!anoInicial && !mesInicial)
+        throw new Error('error!')
 
-// fetch(`${BASE_URL}/accounts`, {
-//     method: 'GET',
-//     headers: _headers
-// }).then(r => r.json()).then(r => console.log(r));
+    for (var ano = anoInicial; ano <= anoAtual; ano++) {
+        for(var mes = mesInicial; mes <= 12; mes++){
+            const start_date = new Date(ano, mes, 1);
+            const end_date = new Date(ano, mes + 1, 0);
+    
+            const transactions = await fetchOrganizze('transactions', {
+                start_date: start_date.toISOString(),
+                end_date: end_date.toISOString()
+            })
 
-// fetch(`${BASE_URL}/categories`, {
-//     method: 'GET',
-//     headers: _headers
-// }).then(r => r.json()).then(r => console.log(r));
+            if(transactions.length === 0){
+                continue;
+            }
+    
+            data = [...data, ...transactions]
+        }
+    }
 
-// fetch(`${BASE_URL}/credit_cards`, {
-//     method: 'GET',
-//     headers: _headers
-// }).then(r => r.json()).then(r => console.log(r));
+    return data;
+}
 
-// fetch(`${BASE_URL}/transactions`, {
-//     method: 'GET',
-//     headers: _headers
-// }).then(r => r.json()).then(r => console.log(r));
+const organizzeapi = await transactions(2018, 4)
+// console.log(organizzeapi)
+
+// fs.writeFileSync('C:\\Pasta\\transactions.txt', JSON.stringify(data));
+
+// import { data } from './transactions.js'
+
+// console.log('local', data.length)
+console.log('organizze', organizzeapi.length)
