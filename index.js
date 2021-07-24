@@ -3,15 +3,17 @@ import { fileURLToPath } from 'url';
 // import { readFile } from 'fs/promises';
 import fetch from 'node-fetch';
 import fs from 'fs'
+import dotenv from 'dotenv'
+dotenv.config();
 
 const fetchOrganizze = async (path, start_date, end_date) => {
     try {
-        const BASE_URL = 'https://api.organizze.com.br/rest/v2';
-        const EMAIL = 'samuel.rvg@gmail.com'
-        const KEY = '19bcad432e226ca1e9ceb5d0e6f8746d8f66827b'
+        const BASE_URL = process.env.BASE_URL
+        const EMAIL = process.env.EMAIL
+        const KEY = process.env.KEY
 
         const _headers = {
-            'User-Agent': 'samuel.rvg@gmail.com',
+            'User-Agent': EMAIL,
             'Authorization': `Basic  ${Buffer.from(`${EMAIL}:${KEY}`).toString('base64')}`,
             'Content-Type': 'application/json'
         }
@@ -47,10 +49,7 @@ const transactions = async (anoInicial, mesInicial) => {
             const start_date = new Date(ano, mes, 1);
             const end_date = new Date(ano, mes + 1, 0);
     
-            const transactions = await fetchOrganizze('transactions', {
-                start_date: start_date.toISOString(),
-                end_date: end_date.toISOString()
-            })
+            const transactions = await fetchOrganizze('transactions', start_date.toISOString(), end_date.toISOString())
 
             if(transactions.length === 0){
                 continue;
