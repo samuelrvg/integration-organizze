@@ -9,7 +9,9 @@ yarn
 ## Usage
 
 ```sh
-yarn start
+1. yarn server
+
+2. yarn start
 ```
 
 ## Author
@@ -23,6 +25,8 @@ yarn start
 
 - https://github.com/organizze/api-doc
 - https://github.com/node-fetch/node-fetch
+- https://github.com/typicode/json-server
 - https://nodejs.org/en/docs/
 
 - https://stackoverflow.com/questions/43842793/basic-authentication-with-fetch
+- https://stackoverflow.com/questions/34944099/how-to-import-a-json-file-in-ecmascript-6
