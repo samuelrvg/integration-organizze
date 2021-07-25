@@ -37,17 +37,18 @@ const fetchOrganizze = async (path, start_date, end_date) => {
     }
 }
 
-const transactions = async (anoInicial, mesInicial) => {
-    const anoAtual = new Date().getFullYear();
-    let data = []
+const transactions = async (initialYear, initialMonth) => {
+    const currentYear = new Date().getFullYear();
+    const monthsOfTheYear = 12;
+    let data = [];
 
-    if(!anoInicial || !mesInicial)
+    if(!initialYear || !initialMonth)
         throw new Error('error!')
 
-    for (var ano = anoInicial; ano <= anoAtual; ano++) {
-        for(var mes = mesInicial; mes <= 12; mes++){
-            const start_date = new Date(ano, mes - 1, 1);
-            const end_date = new Date(ano, mes, 0);
+    for (var year = initialYear; year <= currentYear; year++) {
+        for(var month = initialMonth; month <= monthsOfTheYear; month++){
+            const start_date = new Date(year, month - 1, 1);
+            const end_date = new Date(year, month, 0);
     
             const transactions = await fetchOrganizze('transactions', start_date.toISOString(), end_date.toISOString())
 
