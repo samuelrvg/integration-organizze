@@ -26,6 +26,8 @@ yarn
 - https://github.com/organizze/api-doc
 - https://github.com/node-fetch/node-fetch
 - https://github.com/typicode/json-server
+- https://github.com/motdotla/dotenv
+- https://github.com/lodash/lodash
 - https://nodejs.org/en/docs/
 
 - https://stackoverflow.com/questions/43842793/basic-authentication-with-fetch
