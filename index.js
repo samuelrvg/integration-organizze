@@ -1,20 +1,19 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-// import { readFile } from 'fs/promises';
 import fetch from 'node-fetch';
 import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
+const { BASE_URL, EMAIL, KEY } = process.env;
+
+const headers = {
+  'User-Agent': EMAIL, Authorization: `Basic ${Buffer.from(`${EMAIL}:${KEY}`).toString('base64')}`, 'Content-Type': 'application/json',
+};
+
 const fetchData = async (path, startDate, endDate) => {
   try {
-    const { BASE_URL, EMAIL, KEY } = process.env;
-
-    const headers = {
-      'User-Agent': EMAIL, Authorization: `Basic ${Buffer.from(`${EMAIL}:${KEY}`).toString('base64')}`, 'Content-Type': 'application/json',
-    };
-
     let queryParams = '';
     if (!path) {
       throw new Error('path is not defined');
