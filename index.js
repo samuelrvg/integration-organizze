@@ -54,6 +54,11 @@ const transactions = async (initialYear, initialMonth) => {
         endDate.toISOString(),
       );
 
+      if (transactions.error) {
+        console.log(transactions.error);
+        break;
+      }
+
       if (transactions.length === 0) {
         console.log('not found transaction');
         continue;
